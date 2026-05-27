@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "Client": {
+      "title": "Client",
+      "description": "Information about registered dispensary clients",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "favoriteStrain": { "type": "string" },
+        "notes": { "type": "string" },
+        "totalSpend": { "type": "number" },
+        "joinedDate": { "type": "string" }
+      },
+      "required": ["id", "name", "phone", "joinedDate"]
+    },
+    "Strain": {
+      "title": "Strain",
+      "description": "Information about strain inventory entries",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["Indica", "Sativa", "Hybrid"] },
+        "pricePerGram": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "name", "type", "pricePerGram", "active"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Dispensary transaction orders list and cash ledger tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientId": { "type": "string" },
+        "clientName": { "type": "string" },
+        "date": { "type": "string" },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "total": { "type": "number" },
+        "cashReceived": { "type": "number" },
+        "changeGiven": { "type": "number" },
+        "notes": { "type": "string" },
+        "items": { "type": "array" }
+      },
+      "required": ["id", "clientName", "date", "subtotal", "total", "cashReceived", "changeGiven"]
+    }
+  },
+  "firestore": {
+    "clients/{clientId}": {
+      "schema": "Client",
+      "description": "Documents tracking individual dispensary customers"
+    },
+    "strains/{strainId}": {
+      "schema": "Strain",
+      "description": "Available product strains inventory"
+    },
+    "orders/{orderId}": {
+      "schema": "Order",
+      "description": "Orders or ledger receipts of dispensary sale transactions"
+    }
+  }
+}

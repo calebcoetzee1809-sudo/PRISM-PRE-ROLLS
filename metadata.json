@@ -1,0 +1,6 @@
+{
+  "name": "PreRoll Ledger",
+  "description": "An interactive, elegant preroll joint client database tracker and cash flow calculator with quick change calculations, custom joint parameters, and sales history.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Catch-all default deny rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Standard helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    // Clients Collection security
+    match /clients/{clientId} {
+      allow read: if isSignedIn();
+      allow create, update: if isEmailVerified() 
+        && request.resource.data.id is string
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.phone is string;
+      allow delete: if isEmailVerified();
+    }
+
+    // Strains Collection security
+    match /strains/{strainId} {
+      allow read: if isSignedIn();
+      allow create, update: if isEmailVerified()
+        && request.resource.data.id is string
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.pricePerGram is number;
+      allow delete: if isEmailVerified();
+    }
+
+    // Orders Collection security
+    match /orders/{orderId} {
+      allow read: if isSignedIn();
+      allow create: if isEmailVerified()
+        && request.resource.data.id is string
+        && request.resource.data.clientName is string
+        && request.resource.data.total is number;
+      allow update: if isEmailVerified()
+        && request.resource.data.id == resource.data.id;
+      allow delete: if isEmailVerified();
+    }
+  }
+}
